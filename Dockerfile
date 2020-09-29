@@ -18,16 +18,20 @@ RUN apt-get remove -y python && apt-get install -y python3  python3-pip curl
 RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 RUN rm -f /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip
 
-RUN echo "export PATH="$PATH"" >> ~/.profile
+RUN echo "export PATH="/usr/bin/python:$PATH"" >> ~/.profile
 RUN echo "export PYTHONPATH="/usr/bin/python:$PYTHONPATH"" >> ~/.profile
-
 RUN echo "export PGPASSFILE="~/.pgpass"" >> ~/.profile
+
 RUN chmod 0644 ~/.profile
 
 # Install retriever master
 RUN pip install git+https://git@github.com/weecology/retriever.git  && retriever ls
 RUN pip install pymysql
 RUN pip install psycopg2-binary -U
+RUN pip install h5py
+RUN pip install Pillow
+RUN pip install kaggle
+
 # Install Postgis after Python is setup
 RUN apt-get install -y --force-yes postgis
 COPY . /Retriever.jl
